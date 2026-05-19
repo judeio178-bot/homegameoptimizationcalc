@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sports Team Schedule Profit Optimizer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#0c2340; --blue:#132f57; --gray:#c4ced4; --bg:#f6f7fb;
+      --card:#fff; --muted:#536d8f; --border:#d5dde3; --green:#5ca042;
+      --red:#ff2a17; --orange:#ff8a00;
+    }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--navy);
+      min-height: 100vh;
+    }
+    body::before {
+      content:"";
+      position:fixed; inset:0; z-index:-1; opacity:.055;
+      background-image: repeating-linear-gradient(90deg, var(--navy) 0px, var(--navy) 2px, transparent 2px, transparent 34px);
+    }
+    body.generic::before {
+      background-image: radial-gradient(circle at 20% 20%, rgba(12,35,64,.15), transparent 30%),
+                        radial-gradient(circle at 80% 10%, rgba(255,138,0,.12), transparent 30%);
+    }
+    .hero {
+      position:relative; overflow:hidden; background:var(--navy); color:#fff; padding:58px 24px;
+    }
+    .hero::before {
+      content:""; position:absolute; inset:0; opacity:.16;
+      background-image: repeating-linear-gradient(90deg, #fff 0px, #fff 1px, transparent 1px, transparent 38px);
+    }
+    body.generic .hero::before { background-image: linear-gradient(135deg, rgba(255,255,255,.15), transparent); }
+    .container { width:min(1180px, 100%); margin:0 auto; position:relative; }
+    .hero-grid { display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center; }
+    .badges { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
+    .badge {
+      display:inline-flex; align-items:center; gap:7px; border-radius:999px; padding:9px 16px;
+      font-size:14px; font-weight:900; background:#fff; color:var(--navy);
+    }
+    .badge.outline { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.45); font-weight:600; }
+    h1 { font-size:clamp(40px, 6vw, 68px); line-height:.96; letter-spacing:-2px; font-weight:900; max-width:850px; }
+    .hero p { margin-top:20px; max-width:720px; color:rgba(255,255,255,.84); font-size:18px; line-height:1.65; }
+    .button-row { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+    button { cursor:pointer; border:none; font-family:inherit; font-weight:900; transition:.2s ease; }
+    .btn { border-radius:18px; padding:15px 22px; font-size:15px; }
+    .btn-light { background:#fff; color:var(--navy); }
+    .btn-light:hover { background:#e8edf3; }
+    .btn-navy { background:var(--blue); color:#fff; }
+    .btn-navy:hover { background:#1a3d70; }
+    .btn-gray { background:var(--gray); color:var(--navy); }
+    .btn-orange { background:var(--orange); color:#fff; }
+
+    .main-card, .panel, .mini-panel {
+      background:#fff; border:1px solid var(--border); border-radius:32px;
+      box-shadow:0 14px 34px rgba(12,35,64,.09);
+    }
+    .main-card { padding:30px; box-shadow:0 24px 60px rgba(0,0,0,.25); border-color:rgba(255,255,255,.2); color:var(--navy); }
+    .card-header { display:flex; gap:14px; align-items:center; padding-bottom:18px; border-bottom:1px solid var(--border); margin-bottom:22px; }
+    .ball-icon { display:grid; place-items:center; width:58px; height:58px; border-radius:50%; border:4px solid var(--navy); font-size:30px; background:#fff; }
+    .eyebrow { color:var(--muted); font-size:12px; font-weight:900; letter-spacing:2px; text-transform:uppercase; }
+    .card-title { font-size:21px; font-weight:900; margin-top:4px; }
+    .stat-row { display:flex; justify-content:space-between; align-items:center; gap:18px; }
+    .big-number { font-size:76px; font-weight:900; line-height:1; margin-top:8px; }
+    .trophy { border-radius:26px; background:var(--navy); color:#fff; padding:20px; font-size:46px; }
+    .mini-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:15px; margin-top:26px; }
+    .mini-card { background:#eef2f6; border-radius:24px; padding:18px; }
+    .mini-card h3 { color:var(--muted); font-size:12px; font-weight:900; }
+    .mini-card p { margin-top:8px; font-size:28px; font-weight:900; color:var(--navy); }
+    .note { margin-top:20px; color:var(--muted); font-size:14px; line-height:1.6; }
+
+    .section { padding:42px 24px; }
+    .section-title { font-size:34px; font-weight:900; letter-spacing:-1px; margin-bottom:8px; }
+    .section-subtitle { color:var(--muted); font-size:16px; line-height:1.6; margin-bottom:22px; max-width:850px; }
+    .toggle-bar {
+      display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:28px;
+      background:#fff; border:1px solid var(--border); border-radius:30px; padding:18px 20px;
+      box-shadow:0 10px 28px rgba(12,35,64,.08);
+    }
+    .toggle-left { display:flex; gap:14px; align-items:center; }
+    .square-icon { background:var(--navy); color:#fff; border-radius:18px; padding:13px; font-size:23px; }
+    .toggle-bar h2 { font-size:21px; font-weight:900; }
+    .toggle-bar p { color:var(--muted); font-size:14px; margin-top:3px; }
+
+    .content-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:30px; }
+    .panel { padding:28px; }
+    .panel-heading { display:flex; gap:14px; align-items:center; margin-bottom:22px; }
+    .panel h2 { font-size:27px; font-weight:900; letter-spacing:-.5px; }
+    .panel-subtitle { color:var(--muted); font-size:14px; margin-top:4px; line-height:1.5; }
+    .input-list { display:grid; gap:18px; }
+    .input-card { background:#f8fafc; border:1px solid var(--border); border-radius:26px; padding:18px; }
+    .input-top { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:14px; }
+    .input-info { display:flex; gap:12px; }
+    .input-icon { font-size:22px; margin-top:1px; }
+    .input-card h3 { font-size:16px; font-weight:900; }
+    .input-card p { margin-top:5px; color:var(--muted); font-size:13px; line-height:1.45; }
+    .value-pill { white-space:nowrap; background:#fff; padding:8px 12px; border-radius:999px; font-size:13px; font-weight:900; box-shadow:0 4px 12px rgba(12,35,64,.08); }
+    input[type="range"] { width:100%; accent-color:var(--navy); }
+    input[type="number"] { width:100%; border-radius:18px; border:1px solid var(--gray); background:#fff; padding:13px 16px; font-size:16px; font-weight:800; color:var(--navy); outline:none; }
+    input[type="number"]:focus { box-shadow:0 0 0 3px rgba(12,35,64,.18); }
+    .exact-label { display:block; color:var(--muted); font-size:11px; font-weight:900; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+    .right-column { display:grid; gap:30px; }
+    .chart-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:18px; }
+    .peak-pill { border-radius:999px; background:var(--navy); color:#fff; padding:10px 14px; font-size:13px; font-weight:900; white-space:nowrap; }
+    .chart-wrap { width:100%; overflow-x:auto; }
+    svg { width:100%; min-width:630px; border-radius:26px; background:#f8fafc; }
+    .analysis-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:14px; margin-top:22px; }
+    .analysis-card { background:#f8fafc; border:1px solid var(--border); border-radius:22px; padding:16px; }
+    .analysis-card h3 { color:var(--muted); font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:1px; }
+    .analysis-card p { margin-top:7px; font-size:24px; font-weight:900; }
+    .analysis-card small { display:block; margin-top:8px; color:var(--muted); line-height:1.35; }
+
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    .table-wrap { margin-top:18px; border:1px solid var(--border); border-radius:24px; overflow:hidden; }
+    th { background:var(--navy); color:#fff; padding:14px; text-align:left; }
+    td { padding:14px; border-bottom:1px solid #eef2f6; vertical-align:top; }
+    tr.optimal-row { background:#e9f0f7; font-weight:900; }
+    .source-link { color:var(--navy); font-weight:900; }
+
+    .slides-shell { background:#fff; border:1px solid var(--border); border-radius:32px; padding:20px; box-shadow:0 14px 34px rgba(12,35,64,.09); }
+    .slides-top { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:16px; }
+    .slide-controls { display:flex; gap:10px; }
+    .slide-btn { width:42px; height:42px; border-radius:50%; background:var(--navy); color:#fff; font-size:22px; }
+    .slides {
+      display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x mandatory;
+      scroll-behavior:smooth; padding:4px 4px 18px; cursor:grab;
+    }
+    .slides.dragging { cursor:grabbing; scroll-behavior:auto; }
+    .slide {
+      flex:0 0 min(900px, 92%); min-height:380px; scroll-snap-align:center;
+      border-radius:28px; padding:28px; background:#f8fafc; border:1px solid var(--border);
+    }
+    .slide h3 { font-size:30px; font-weight:900; margin-bottom:16px; }
+    .slide p, .slide li { color:#0a1526; font-size:18px; line-height:1.55; }
+    .slide ul { margin-left:24px; margin-top:12px; }
+    .green { color:var(--green); } .red { color:var(--red); } .orange { color:var(--orange); }
+    .flowchart { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:18px; align-items:stretch; }
+    .flow-step { background:#fff; border:1px solid var(--border); border-radius:20px; padding:16px; position:relative; }
+    .flow-step h4 { font-size:15px; font-weight:900; margin-bottom:8px; }
+    .flow-step p { font-size:13px; color:var(--muted); line-height:1.4; }
+    .flow-arrow { display:grid; place-items:center; font-size:26px; color:var(--muted); }
+    .research-grid { display:grid; grid-template-columns:1.1fr .9fr; gap:28px; }
+    .formula-card { background:var(--navy); color:#fff; border-radius:32px; padding:30px; box-shadow:0 14px 34px rgba(12,35,64,.16); }
+    .formula-card h2 { font-size:30px; font-weight:900; }
+    .formula-card p { margin-top:16px; color:rgba(255,255,255,.84); line-height:1.7; }
+    .formula-box { margin-top:16px; border-radius:22px; background:rgba(255,255,255,.11); padding:16px; font-family:"Courier New", monospace; font-size:16px; overflow-x:auto; }
+    .small-list { display:grid; gap:12px; margin-top:16px; }
+    .small-item { background:#f8fafc; border-radius:18px; padding:14px; border:1px solid var(--border); }
+    .small-item b { display:block; margin-bottom:5px; }
+    .small-item span { color:var(--muted); font-size:13px; line-height:1.4; display:block; }
+    footer { color:var(--muted); text-align:center; font-size:14px; padding:8px 24px 48px; }
+    .factor-breakdown-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 22px;
+    }
+    .factor-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 20px;
+      box-shadow: 0 10px 26px rgba(12,35,64,.07);
+    }
+    .factor-card h3 {
+      font-size: 17px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .factor-card .value {
+      font-size: 24px;
+      font-weight: 900;
+      margin: 10px 0;
+    }
+    .factor-card p {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+    .formula-line {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      margin-top: 12px;
+      font-family: "Courier New", monospace;
+      overflow-x: auto;
+    }
+    .source-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      margin-top: 16px;
+    }
+    .source-card h3 {
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .source-card p, .source-card li {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+    .source-card ul {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+    .calc-highlight {
+      background: #e9f0f7;
+      border: 1px solid #c8d6e3;
+      border-radius: 18px;
+      padding: 14px;
+      margin-top: 12px;
+      font-weight: 900;
+    }
+
+    @media (max-width: 1000px) {
+      .hero-grid, .content-grid, .research-grid { grid-template-columns:1fr; }
+      .analysis-grid { grid-template-columns:repeat(2,1fr); }
+      .flowchart { grid-template-columns:1fr; }
+      .factor-breakdown-grid { grid-template-columns:1fr; }
+      .flow-arrow { transform:rotate(90deg); }
+    }
+    @media (max-width: 700px) {
+      .toggle-bar, .chart-header, .slides-top { flex-direction:column; align-items:flex-start; }
+      .mini-grid, .analysis-grid { grid-template-columns:1fr; }
+      .input-top { flex-direction:column; }
+      .big-number { font-size:62px; }
+      .slide { flex-basis:96%; padding:22px; }
+    }
+  </style>
+</head>
+<body>
+<section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="badges">
+          <span class="badge" id="brandBadge">New York Yankees Calculus Optimization</span>
+          <span class="badge outline" id="locationBadge">📍 Yankee Stadium, Bronx, NY</span>
+        </div>
+        <h1 id="heroTitle">How Many Home Games Should the Yankees Play?</h1>
+        <p id="heroText">
+          A Yankees-themed profit optimizer that models ticket sales, concessions, merch,
+          YES Network-style broadcast value, stadium costs, rivalry games, and Bronx economic impact.
+        </p>
+        <div class="button-row">
+          <button class="btn btn-light" id="resetBtn">Reset Model Values</button>
+          <button class="btn btn-navy" id="customizeHeroBtn">🔒 Turn On Customize Mode</button>
+          <button class="btn btn-gray" id="teamToggleBtn">Switch to Generic Team Mode</button>
+        </div>
+      </div>
+
+      <div class="main-card">
+        <div class="card-header">
+          <div class="ball-icon" id="mainIcon">⚾</div>
+          <div>
+            <div class="eyebrow" id="modelEyebrow">Bronx Bombers Model</div>
+            <div class="card-title">Profit Maximum</div>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div>
+            <div class="eyebrow">Modeled Optimal Home Games</div>
+            <div class="big-number" id="practicalOptimal">81</div>
+          </div>
+          <div class="trophy">🏆</div>
+        </div>
+
+        <div class="mini-grid">
+          <div class="mini-card">
+            <h3>Estimated Max Profit</h3>
+            <p id="optimalProfit">$248.1M</p>
+          </div>
+          <div class="mini-card">
+            <h3 id="actualGamesLabel">Actual 2024 Home Games</h3>
+            <p id="actualGamesDisplay">79</p>
+          </div>
+        </div>
+
+        <div class="note" id="topNote">
+          In this model, the Yankees' unconstrained peak is above the normal 81-game home schedule, so the modeled target is limited at 81 home games.
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section" style="padding-top:24px; padding-bottom:10px">
+    <div class="container">
+      <div class="toggle-bar">
+        <div class="toggle-left">
+          <div class="square-icon">🧭</div>
+          <div>
+            <h2>Quick Navigation</h2>
+            <p>Scroll normally or jump to a section below. This is one continuous website, not separate tabs.</p>
+          </div>
+        </div>
+        <div class="button-row" style="margin-top:0">
+          <a href="#yankeesModelSection"><button class="btn btn-navy">Calculus Analysis</button></a>
+          <a href="#customizeSection"><button class="btn btn-gray">Customize</button></a>
+          <a href="#factorsSection"><button class="btn btn-gray">Profit Factors</button></a>
+          <a href="#researchSection"><button class="btn btn-gray">Research</button></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container">
+      <div class="toggle-bar">
+        <div class="toggle-left">
+          <div class="square-icon">🎚️</div>
+          <div>
+            <h2>Mode Toggles</h2>
+            <p id="modeText">Yankees Mode is on. Customize Mode is locked, so sliders stay in realistic ranges.</p>
+          </div>
+        </div>
+        <div class="button-row" style="margin-top:0">
+          <button class="btn btn-navy" id="customizeBtn">Unlock Full Customization</button>
+          <button class="btn btn-gray" id="teamToggleBtn2">Generic Team Mode</button>
+        </div>
+      </div>
+
+      <div class="slides-shell">
+        <div class="slides-top">
+          <div>
+            <h2 class="section-title" style="margin-bottom:0">Project Planning Slides</h2>
+            <p class="section-subtitle" style="margin:4px 0 0">Swipe, drag, scroll, or use the arrows. This matches your document style but makes it interactive.</p>
+          </div>
+          <div class="slide-controls">
+            <button class="slide-btn" id="prevSlide">‹</button>
+            <button class="slide-btn" id="nextSlide">›</button>
+          </div>
+        </div>
+
+        <div class="slides" id="slides">
+          <div class="slide">
+            <h3>Sports Team Schedule Profit Optimization</h3>
+            <p><b>Objective:</b><br>Find the optimal number of games for a sports team to maximize profit.</p>
+            <p style="margin-top:16px"><b>Form Factor:</b><br>An interactive interface where the user can set prices and costs, including ticket prices, transportation, surrounding-area growth, food profit, and broadcast money.</p>
+          </div>
+
+          <div class="slide">
+            <h3 class="green">$ Gained at Sports Games</h3>
+            <ul>
+              <li>Food and concession profit</li>
+              <li>Ticket prices / gate receipts</li>
+              <li>Growth in surrounding areas: parking, nearby restaurants, and bars</li>
+              <li>Jersey and merchandise sales</li>
+              <li>TV broadcast rights per game</li>
+            </ul>
+          </div>
+
+          <div class="slide">
+            <h3 class="red">$ Spent for Teams Per Game</h3>
+            <ul>
+              <li>Production of food</li>
+              <li>Paying employees and game-day staff</li>
+              <li>Player salaries and luxury tax allocation</li>
+              <li>Stadium maintenance: lawn care, water, AC, and construction fees</li>
+              <li>Merchandise production</li>
+              <li>Player transportation</li>
+              <li>Advertisement and production costs</li>
+            </ul>
+          </div>
+
+          <div class="slide">
+            <h3 class="orange">Factors to Keep in Mind</h3>
+            <ul>
+              <li>Some games generate more profit: rivalry games, playoff races, summer games, and high-demand opponents.</li>
+              <li>Hot games can create more beverage and food sales.</li>
+              <li>Some games underperform because of bad weather, weak opponents, or too many games in a short period.</li>
+              <li>The model uses diminishing returns because more games can make each game feel less special.</li>
+            </ul>
+          </div>
+
+          <div class="slide">
+            <h3>Flowchart / Planning Section</h3>
+            <p>The website follows this planning process:</p>
+            <div class="flowchart">
+              <div class="flow-step"><h4>1. Research</h4><p>Find attendance, ticket revenue, payroll, and broadcast estimates.</p></div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step"><h4>2. Inputs</h4><p>Let the user change revenue, costs, attendance drop, and schedule structures.</p></div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step"><h4>3. Model</h4><p>Use A(g) for attendance and P(g) for total profit.</p></div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step"><h4>4. Optimize</h4><p>Find where P'(g) = 0, then compare it to the actual schedule.</p></div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-step"><h4>5. Analyze</h4><p>Compare actual games to the modeled optimal and calculate missed profit.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="yankeesModelSection">
+    <div class="container">
+      <h2 class="section-title" id="modelSectionTitle">Yankees Modeled Optimal Games</h2>
+      <p class="section-subtitle" id="modelSectionSubtitle">
+        This section uses the research-based Yankees starting values. The model uses calculus to find the number of home games where profit is maximized, then compares that value to the Yankees' actual home schedule.
+      </p>
+
+      <div class="panel" style="margin-bottom:28px">
+        <h2>Calculus Connection: Why We Set P'(g) = 0</h2>
+        <p class="panel-subtitle">
+          In this project, <b>P(g)</b> means total profit when the team plays <b>g</b> home games. The derivative, <b>P'(g)</b>, represents marginal profit: how much extra profit the next home game adds.
+        </p>
+
+        <div class="formula-line" id="expandedProfitFormula">P(g) = ag² + bg</div>
+        <div class="formula-line" id="derivativeFormula">P'(g) = 2ag + b</div>
+        <div class="formula-line" id="criticalPointFormula">Set P'(g) = 0 to find the critical point.</div>
+
+        <div class="factor-breakdown-grid">
+          <div class="factor-card">
+            <h3>Before the Maximum</h3>
+            <div class="value">P'(g) &gt; 0</div>
+            <p>Profit is still increasing. Each extra home game adds positive profit.</p>
+          </div>
+          <div class="factor-card">
+            <h3>At the Maximum</h3>
+            <div class="value">P'(g) = 0</div>
+            <p>The graph has a flat tangent line. This is where profit stops increasing and starts decreasing.</p>
+          </div>
+          <div class="factor-card">
+            <h3>After the Maximum</h3>
+            <div class="value">P'(g) &lt; 0</div>
+            <p>Profit is decreasing. Extra games hurt profit because attendance drops too much compared to the revenue gained.</p>
+          </div>
+        </div>
+
+        <p class="note" id="calculusExplanation">
+          Since the profit equation is a downward-opening quadratic, the critical point where P'(g)=0 is a maximum, not a minimum.
+        </p>
+      </div>
+
+      <div class="content-grid">
+        <div class="formula-card">
+          <h2>Calculus Model</h2>
+          <p>Average attendance is modeled as decreasing when more home games are added:</p>
+          <div class="formula-box" id="attendanceFormula">A(g) = 66,196 − 300g</div>
+          <p>Total profit multiplies the number of games by the estimated profit from each game:</p>
+          <div class="formula-box" id="profitFormula">P(g) = g[((A(g))(115.46) + $1.3M + $410,000) − $3.4M]</div>
+          <p id="derivativeText">Since this is a downward-opening quadratic, the maximum happens where P'(g) = 0.</p>
+        </div>
+
+        <div class="panel">
+          <h2>Actual vs. Optimal Analysis</h2>
+          <p class="panel-subtitle" id="analysisIntro">The Yankees played 79 home games in the 2024 data set. This model compares that number to the modeled optimized schedule.</p>
+
+          <div class="analysis-grid">
+            <div class="analysis-card">
+              <h3>Unconstrained Peak</h3>
+              <p id="unconstrainedPeak">84.7</p>
+              <small>The pure calculus answer from setting P'(g)=0.</small>
+            </div>
+            <div class="analysis-card">
+              <h3>Modeled Target</h3>
+              <p id="practicalTarget">81</p>
+              <small>Found by the derivative-based profit model.</small>
+            </div>
+            <div class="analysis-card">
+              <h3>Actual Games</h3>
+              <p id="actualGamesAnalysis">79</p>
+              <small>Based on the research value or your custom input.</small>
+            </div>
+            <div class="analysis-card">
+              <h3>Modeled Missed Profit</h3>
+              <p id="missedProfit">$652,622</p>
+              <small>This is a model estimate, not official team accounting.</small>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Schedule</th>
+                  <th>Games</th>
+                  <th>Estimated Profit</th>
+                </tr>
+              </thead>
+              <tbody id="analysisTable"></tbody>
+            </table>
+          </div>
+
+          <p class="note" id="analysisConclusion">
+            Using the default assumptions, the model says the Yankees would make about $652,622 more by reaching the practical cap of 81 home games instead of 79.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="customizeSection">
+    <div class="container">
+      <h2 class="section-title">Customizable Profit Optimizer</h2>
+      <p class="section-subtitle">
+        This section lets the user pick every important value. In slider mode, the values stay in reasonable ranges. In Customize Mode, the user can type exact numbers.
+      </p>
+
+      <div class="content-grid">
+        <div class="panel">
+          <div class="panel-heading">
+            <div class="square-icon">🧮</div>
+            <div>
+              <h2>Profit Inputs</h2>
+              <div class="panel-subtitle">Each input includes a short explanation so the user knows what they are changing.</div>
+            </div>
+          </div>
+          <div class="input-list" id="inputList"></div>
+        </div>
+
+        <div class="right-column">
+          <div class="panel">
+            <div class="chart-header">
+              <div>
+                <h2 id="chartTitle">Yankees Profit Curve</h2>
+                <div class="panel-subtitle">The curve shows how profit changes as the number of home games changes.</div>
+              </div>
+              <span class="peak-pill" id="peakPill">Modeled Peak ≈ 81 games</span>
+            </div>
+            <div class="chart-wrap">
+              <svg id="profitChart" viewBox="0 0 720 360"></svg>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Schedule Comparison Table</h2>
+            <div class="panel-subtitle">Compare actual games, the modeled target, and other possible schedules.</div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Home Games</th>
+                    <th>Avg. Attendance</th>
+                    <th>Estimated Profit</th>
+                  </tr>
+                </thead>
+                <tbody id="comparisonTable"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>What Each Input Means</h2>
+            <div class="small-list">
+              <div class="small-item"><b>Attendance demand</b><span>How many fans would want to attend before schedule fatigue lowers demand.</span></div>
+              <div class="small-item"><b>Attendance drop</b><span>The diminishing-returns part of the model. More games means each game may feel less rare, so average attendance can fall.</span></div>
+              <div class="small-item"><b>Revenue per fan</b><span>Ticket/gate revenue, food profit, and merch profit combine into one per-fan value.</span></div>
+              <div class="small-item"><b>Broadcast and local boosts</b><span>These add money even if the attendance is not changing much.</span></div>
+              <div class="small-item"><b>Costs</b><span>Per-game costs include player salary allocation, staff, maintenance, transportation, production, and advertising.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section" id="factorsSection">
+    <div class="container">
+      <h2 class="section-title">Every Factor That Goes Into Profit</h2>
+      <p class="section-subtitle">
+        This tab breaks the profit model into each individual piece so it is clear what the website is adding and subtracting.
+      </p>
+
+      <div class="panel">
+        <h2>Profit Equation</h2>
+        <p class="panel-subtitle">Let g = number of home games. The model first estimates attendance, then multiplies game profit by the number of games.</p>
+        <div class="formula-line" id="factorAttendanceEquation">A(g) = 66,196 − 300g</div>
+        <div class="formula-line" id="factorRevenueFanEquation">Revenue per fan = ticket/gate + food profit + merch profit</div>
+        <div class="formula-line" id="factorProfitEquation">P(g) = g[((A(g))(revenue per fan) + broadcast + special adjustments) − cost]</div>
+      </div>
+
+      <div class="factor-breakdown-grid">
+        <div class="factor-card">
+          <h3>1. Home Games</h3>
+          <div class="value" id="factorGames">81 games</div>
+          <p>This is the number being optimized. More games add chances to make money, but too many games lower average attendance in the model.</p>
+        </div>
+        <div class="factor-card">
+          <h3>2. Attendance Demand</h3>
+          <div class="value" id="factorDemand">66,196 fans</div>
+          <p>This is the starting fan demand before the schedule becomes too crowded.</p>
+        </div>
+        <div class="factor-card">
+          <h3>3. Attendance Drop</h3>
+          <div class="value" id="factorDrop">300 fans/game</div>
+          <p>This creates diminishing returns. Each added home game lowers expected average attendance by this amount.</p>
+        </div>
+        <div class="factor-card">
+          <h3>4. Ticket / Gate Revenue</h3>
+          <div class="value" id="factorGate">$100.61 per fan</div>
+          <p>This comes from gate receipts divided by total attendance.</p>
+        </div>
+        <div class="factor-card">
+          <h3>5. Food Profit</h3>
+          <div class="value" id="factorFood">$8.85 per fan</div>
+          <p>This is a conservative estimate based on concession spending and high concession gross margins.</p>
+        </div>
+        <div class="factor-card">
+          <h3>6. Merch Profit</h3>
+          <div class="value" id="factorMerch">$6.00 per fan</div>
+          <p>This estimates profit from hats, jerseys, and other merchandise.</p>
+        </div>
+        <div class="factor-card">
+          <h3>7. Broadcast Revenue</h3>
+          <div class="value" id="factorBroadcast">$1.3M/game</div>
+          <p>This is the estimated media value assigned to each game.</p>
+        </div>
+        <div class="factor-card">
+          <h3>8. Special Game Adjustment</h3>
+          <div class="value" id="factorSpecial">$410,000/game</div>
+          <p>Rivalry bonus + local business growth − weather/underperformance penalty.</p>
+        </div>
+        <div class="factor-card">
+          <h3>9. Total Per-Game Cost</h3>
+          <div class="value" id="factorCost">$3.4M/game</div>
+          <p>Includes player salary allocation, luxury tax allocation, employees, maintenance, utilities, transportation, ads, and production.</p>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:28px">
+        <h2>Live Profit Breakdown at the Practical Optimal</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Live Value</th>
+                <th>Explanation</th>
+              </tr>
+            </thead>
+            <tbody id="factorBreakdownTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section" id="researchSection">
+    <div class="container">
+      <h2 class="section-title">My Research</h2>
+      <p class="section-subtitle">
+        These are the real or estimated values used to build the default model. Some team expenses are private, so the website clearly labels estimates.
+      </p>
+
+      <div class="research-grid">
+        <div class="panel">
+          <h2>Data Found</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data Point</th>
+                  <th>Value Used</th>
+                  <th>Why It Matters</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2024 home games</td>
+                  <td>79</td>
+                  <td>Used as the actual schedule comparison point. Source: ESPN attendance table.</td>
+                </tr>
+                <tr>
+                  <td>2024 home attendance</td>
+                  <td>3,309,838 total / 41,896 per game</td>
+                  <td>Used to anchor the attendance model. Source: ESPN attendance table.</td>
+                </tr>
+                <tr>
+                  <td>2024 gate receipts</td>
+                  <td>$333 million</td>
+                  <td>Used to estimate gate revenue per fan. Source: Statista.</td>
+                </tr>
+                <tr>
+                  <td>Gate revenue per fan</td>
+                  <td>$100.61</td>
+                  <td>Calculated as $333,000,000 ÷ 3,309,838 fans.</td>
+                </tr>
+                <tr>
+                  <td>2024 luxury tax payroll + tax bill</td>
+                  <td>About $378.7 million</td>
+                  <td>Used to estimate salary/tax allocation per game. Source: Spotrac.</td>
+                </tr>
+                <tr>
+                  <td>Food and merch profit</td>
+                  <td>$8.85 food + $6.00 merch per fan</td>
+                  <td>Estimated because exact team profit margins are private.</td>
+                </tr>
+                <tr>
+                  <td>Broadcast revenue per game</td>
+                  <td>$1.25 million</td>
+                  <td>Estimated from local TV/media value spread across games.</td>
+                </tr>
+                <tr>
+                  <td>Operating costs per home game</td>
+                  <td>$3.44 million</td>
+                  <td>Estimate including salary allocation, employees, maintenance, utilities, travel, ads, and production.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="source-card">
+            <h3>Why $8.85 food profit per fan is reasonable</h3>
+            <p>
+              The $8.85 value is an estimate, not an official Yankees number. It is based on the idea that a fan buys about $14.75 of basic concessions and that the stadium keeps about 60% as gross profit.
+            </p>
+            <div class="calc-highlight">$14.75 × 60% = $8.85 food profit per fan</div>
+            <p style="margin-top:10px">
+              This is reasonable because concession items like hot dogs, soda, and beer are usually high-margin. A stadium concession industry estimate places hot dog gross margins around 60%–75%, so using 60% is a conservative lower-end assumption.
+            </p>
+          </div>
+
+          <div class="source-card">
+            <h3>Exact source list for research values</h3>
+            <ul>
+              <li><b>ESPN 2024 MLB Attendance:</b> Yankees listed with 79 home games, 3,309,838 home attendance, and 41,896 average home attendance.</li>
+              <li><b>Statista Yankees Gate Receipts:</b> Yankees 2024 gate receipts listed at $333 million.</li>
+              <li><b>Spotrac Yankees 2024 Financial Summary:</b> Yankees 2024 luxury tax payroll listed at $316,192,828 and tax bill at $62,512,111.</li>
+              <li><b>Concession estimate:</b> $8.85 food profit is estimated from $14.75 basic concession spending × 60% margin. The 60% margin is supported by concession-industry estimates for high-margin stadium items.</li>
+            </ul>
+          </div>
+
+          <p class="note">
+            Important: attendance, gate receipts, and payroll/tax are sourced values. Food profit, merch profit, broadcast-per-game, operating costs, rivalry bonus, weather penalty, and attendance-drop rate are clearly labeled modeling assumptions because those exact Yankees per-game accounting numbers are private.
+          </p>
+        </div>
+
+        <div class="panel">
+          <h2>Planning Flowchart</h2>
+          <div class="flowchart" style="grid-template-columns:1fr">
+            <div class="flow-step"><h4>1. Choose the question</h4><p>How many home games maximizes profit?</p></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><h4>2. Choose variables</h4><p>Let g = number of home games. Revenue and cost values become adjustable inputs.</p></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><h4>3. Build equations</h4><p>A(g) estimates attendance. P(g) estimates total profit.</p></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><h4>4. Optimize</h4><p>Use the vertex/derivative to find the maximum of the profit curve.</p></div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step"><h4>5. Compare to real life</h4><p>Compare modeled optimal games to the team's actual home games and calculate missed profit.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Built as a one-file interactive calculus project. All estimates are editable in Customize Mode.
+  </footer>
+
+  <script>
+    const defaultValues = {
+      baseAttendance: 66196,
+      attendanceDrop: 300,
+      gatePerFan: 100.61,
+      foodProfit: 8.85,
+      merchProfit: 6,
+      broadcastPerGame: 1253086,
+      costPerGame: 3437685,
+      rivalryBonus: 325000,
+      weatherPenalty: 90000,
+      localBusinessBoost: 175000,
+      actualHomeGames: 79,
+      maxAllowedGames: 120
+    };
+
+    let state = { ...defaultValues };
+    let customizeMode = false;
+    let yankeesMode = true;
+
+    const inputDefinitions = [
+      { key:"baseAttendance", label:"Starting attendance demand", min:50000, max:80000, step:500, icon:"👥", description:"The attendance level before schedule fatigue is applied.", inputStep:1, display:v=>`${Math.round(v).toLocaleString()} fans` },
+      { key:"attendanceDrop", label:"Attendance drop per added home game", min:50, max:700, step:10, icon:"📉", description:"The diminishing-returns value. If this is higher, each extra game lowers average attendance more.", inputStep:1, display:v=>`${Math.round(v)} fans/game` },
+      { key:"gatePerFan", label:"Ticket / gate revenue per fan", min:40, max:180, step:1, icon:"🎟️", description:"Average money earned from each fan's ticket or gate receipt.", inputStep:.01, display:v=>`$${Number(v).toFixed(2)}` },
+      { key:"foodProfit", label:"Food profit per fan", min:0, max:25, step:.25, icon:"🌭", description:"Concession profit after subtracting the production cost of food and drinks.", inputStep:.01, display:v=>`$${Number(v).toFixed(2)}` },
+      { key:"merchProfit", label:"Merch profit per fan", min:0, max:25, step:.25, icon:"🧢", description:"Estimated profit from jerseys, hats, and other merchandise per fan.", inputStep:.01, display:v=>`$${Number(v).toFixed(2)}` },
+      { key:"broadcastPerGame", label:"Broadcast revenue per game", min:500000, max:2500000, step:50000, icon:"📺", description:"TV/media money assigned to each game.", inputStep:1, display:v=>money(v) },
+      { key:"costPerGame", label:"Total cost per home game", min:1500000, max:6000000, step:50000, icon:"🛠️", description:"Player salary allocation, employees, stadium maintenance, utilities, transportation, ads, and production.", inputStep:1, display:v=>money(v) },
+      { key:"rivalryBonus", label:"Rivalry / high-demand game bonus", min:0, max:1000000, step:25000, icon:"⚾", description:"Extra profit from rivalry games, playoff races, sold-out energy, or famous opponents.", inputStep:1, display:v=>money(v) },
+      { key:"weatherPenalty", label:"Weather / underperformance penalty", min:0, max:600000, step:10000, icon:"🌧️", description:"Lost profit from rain, weak opponents, bad timing, or games that underperform.", inputStep:1, display:v=>money(v) },
+      { key:"localBusinessBoost", label:"Surrounding-area growth", min:0, max:800000, step:25000, icon:"🏙️", description:"Parking, nearby restaurants, bars, and other local spending connected to game day.", inputStep:1, display:v=>money(v) },
+      { key:"actualHomeGames", label:"Actual home games played", min:50, max:90, step:1, icon:"📅", description:"The real schedule number used to compare against the model's optimal result.", inputStep:1, display:v=>`${Math.round(v)} games` }
+    ];
+
+    function money(value) {
+      const sign = value < 0 ? "-" : "";
+      const abs = Math.abs(value);
+      return abs >= 1000000 ? `${sign}$${(abs/1000000).toFixed(1)}M` : `${sign}$${Math.round(abs).toLocaleString()}`;
+    }
+    function attendance(g) { return Math.max(0, state.baseAttendance - state.attendanceDrop * g); }
+    function revenuePerFan() { return state.gatePerFan + state.foodProfit + state.merchProfit; }
+    function specialAdjustment() { return state.rivalryBonus + state.localBusinessBoost - state.weatherPenalty; }
+    function profit(g) {
+      const perGameRevenue = attendance(g) * revenuePerFan() + state.broadcastPerGame + specialAdjustment();
+      return g * (perGameRevenue - state.costPerGame);
+    }
+    function unconstrainedOptimal() {
+      const denominator = 2 * state.attendanceDrop * revenuePerFan();
+      if (denominator <= 0) return state.maxAllowedGames;
+      return (state.baseAttendance * revenuePerFan() + state.broadcastPerGame + specialAdjustment() - state.costPerGame) / denominator;
+    }
+    function practicalOptimal() {
+      return Math.max(0, Math.round(unconstrainedOptimal()));
+    }
+    function missedProfit() {
+      return Math.max(0, profit(practicalOptimal()) - profit(Math.round(state.actualHomeGames)));
+    }
+
+    function setValue(key, value) {
+      const n = Number(value);
+      state[key] = Number.isFinite(n) ? n : 0;
+      render();
+    }
+    function resetDefaults() { state = { ...defaultValues }; render(); }
+    function toggleCustomize() { customizeMode = !customizeMode; render(); }
+    function toggleTeamMode() { yankeesMode = !yankeesMode; document.body.classList.toggle("generic", !yankeesMode); render(); }
+
+    function renderInputs() {
+      const list = document.getElementById("inputList");
+      list.innerHTML = "";
+      inputDefinitions.forEach(input => {
+        const card = document.createElement("div");
+        card.className = "input-card";
+        const v = state[input.key];
+        const control = customizeMode
+          ? `<label class="exact-label">Exact Value</label><input type="number" data-key="${input.key}" value="${v}" step="${input.inputStep}" class="number-input" />`
+          : `<input type="range" data-key="${input.key}" value="${v}" min="${input.min}" max="${input.max}" step="${input.step}" class="range-input" />`;
+        card.innerHTML = `
+          <div class="input-top">
+            <div class="input-info">
+              <span class="input-icon">${input.icon}</span>
+              <div><h3>${input.label}</h3><p>${input.description}</p></div>
+            </div>
+            <div class="value-pill">${input.display(v)}</div>
+          </div>
+          ${control}`;
+        list.appendChild(card);
+      });
+      document.querySelectorAll(".range-input,.number-input").forEach(el => {
+        el.addEventListener("input", e => setValue(e.target.dataset.key, e.target.value));
+      });
+    }
+
+    function renderChart() {
+      const svg = document.getElementById("profitChart");
+      const width = 720, height = 360, padding = 48;
+      const minGame = Math.max(0, Math.min(50, Math.round(state.actualHomeGames) - 20));
+      const maxGame = Math.max(100, Math.round(state.maxAllowedGames) + 12, Math.round(unconstrainedOptimal()) + 12);
+      const data = [];
+      for (let g = minGame; g <= maxGame; g++) data.push({ games:g, profitMillions:profit(g)/1000000 });
+      const vals = data.map(d=>d.profitMillions);
+      const minProfit = Math.min(...vals), maxProfit = Math.max(...vals), range = Math.max(1, maxProfit-minProfit);
+      const x = g => padding + ((g-minGame)/(maxGame-minGame))*(width-padding*2);
+      const y = v => height-padding-((v-minProfit)/range)*(height-padding*2);
+      const points = data.map(d=>`${x(d.games)},${y(d.profitMillions)}`).join(" ");
+      const practicalX = x(practicalOptimal());
+      const actualX = x(Math.round(state.actualHomeGames));
+      let html = "";
+      html += `<line x1="${padding}" y1="${height-padding}" x2="${width-padding}" y2="${height-padding}" stroke="#0c2340" stroke-width="2"/>`;
+      html += `<line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height-padding}" stroke="#0c2340" stroke-width="2"/>`;
+      const xTicks = [minGame, Math.round((minGame+maxGame)/2), maxGame];
+      xTicks.forEach(g=>{
+        html += `<line x1="${x(g)}" y1="${padding}" x2="${x(g)}" y2="${height-padding}" stroke="#d5dde3"/>`;
+        html += `<text x="${x(g)}" y="${height-16}" text-anchor="middle" font-size="12" fill="#536d8f">${g}</text>`;
+      });
+      [0,.25,.5,.75,1].forEach(t=>{
+        const val = minProfit + range*t, yy=y(val);
+        html += `<line x1="${padding}" y1="${yy}" x2="${width-padding}" y2="${yy}" stroke="#d5dde3"/>`;
+        html += `<text x="12" y="${yy+4}" font-size="12" fill="#536d8f">$${Math.round(val)}M</text>`;
+      });
+      html += `<line x1="${actualX}" y1="${padding}" x2="${actualX}" y2="${height-padding}" stroke="#ff8a00" stroke-width="2" stroke-dasharray="5 7"/>`;
+      html += `<text x="${actualX}" y="${padding-28}" text-anchor="middle" font-size="12" font-weight="800" fill="#ff8a00">Actual</text>`;
+      html += `<line x1="${practicalX}" y1="${padding}" x2="${practicalX}" y2="${height-padding}" stroke="#0c2340" stroke-width="2" stroke-dasharray="7 7"/>`;
+      html += `<text x="${practicalX}" y="${padding-12}" text-anchor="middle" font-size="12" font-weight="800" fill="#0c2340">Modeled Optimal</text>`;
+      html += `<polyline fill="none" stroke="#0c2340" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" points="${points}"/>`;
+      html += `<text x="${width/2}" y="${height-2}" text-anchor="middle" font-size="13" font-weight="800" fill="#0c2340">Home Games</text>`;
+      html += `<text x="18" y="30" font-size="13" font-weight="800" fill="#0c2340">Profit</text>`;
+      svg.innerHTML = html;
+    }
+
+    function renderTables() {
+      const opt = practicalOptimal();
+      const actual = Math.round(state.actualHomeGames);
+      const games = [60,70,75,actual,opt,79,81,85,90].filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>a-b);
+      document.getElementById("comparisonTable").innerHTML = games.map(g=>`
+        <tr class="${g===opt ? "optimal-row" : ""}">
+          <td>${g}</td><td>${Math.round(attendance(g)).toLocaleString()}</td><td>${money(profit(g))}</td>
+        </tr>`).join("");
+
+      document.getElementById("analysisTable").innerHTML = `
+        <tr><td>Actual schedule</td><td>${actual}</td><td>${money(profit(actual))}</td></tr>
+        <tr class="optimal-row"><td>Modeled optimal target from P'(g)=0</td><td>${opt}</td><td>${money(profit(opt))}</td></tr>
+        <tr><td>Difference</td><td>${opt-actual} games</td><td>${money(missedProfit())}</td></tr>
+      `;
+    }
+
+    function renderText() {
+      const opt = practicalOptimal(), raw = unconstrainedOptimal(), actual = Math.round(state.actualHomeGames);
+      const team = yankeesMode ? "Yankees" : "team";
+      const fullTeam = yankeesMode ? "New York Yankees" : "sports team";
+      const place = yankeesMode ? "Yankee Stadium, Bronx, NY" : "Home stadium";
+
+      document.getElementById("brandBadge").textContent = yankeesMode ? "New York Yankees Calculus Optimization" : "Generic Sports Team Calculus Optimization";
+      document.getElementById("locationBadge").textContent = yankeesMode ? "📍 Yankee Stadium, Bronx, NY" : "📍 Any home stadium";
+      document.getElementById("heroTitle").textContent = yankeesMode ? "How Many Home Games Should the Yankees Play?" : "How Many Home Games Should a Team Play?";
+      document.getElementById("heroText").textContent = yankeesMode
+        ? "A Yankees-themed profit optimizer that models ticket sales, concessions, merch, YES Network-style broadcast value, stadium costs, rivalry games, and Bronx economic impact."
+        : "A customizable sports-team profit optimizer that models ticket sales, concessions, merch, broadcast value, stadium costs, special games, and surrounding-area economic impact.";
+      document.getElementById("mainIcon").textContent = yankeesMode ? "⚾" : "🏟️";
+      document.getElementById("modelEyebrow").textContent = yankeesMode ? "Bronx Bombers Model" : "Custom Team Model";
+      document.getElementById("teamToggleBtn").textContent = yankeesMode ? "Switch to Generic Team Mode" : "Switch to Yankees Mode";
+      document.getElementById("teamToggleBtn2").textContent = yankeesMode ? "Generic Team Mode" : "Yankees Mode";
+      document.getElementById("chartTitle").textContent = yankeesMode ? "Yankees Profit Curve" : "Team Profit Curve";
+      document.getElementById("modelSectionTitle").textContent = yankeesMode ? "Yankees Modeled Optimal Games" : "Modeled Optimal Games";
+      document.getElementById("modelSectionSubtitle").textContent = yankeesMode
+        ? "This section uses the research-based Yankees starting values. The model uses calculus to find the number of home games where profit is maximized, then compares that value to the Yankees' actual home schedule."
+        : "This section uses your custom team values. The model uses calculus to find the number of home games where profit is maximized, then compares that value to the actual number of home games.";
+      document.getElementById("actualGamesLabel").textContent = yankeesMode ? "Actual 2024 Home Games" : "Actual Home Games";
+      document.getElementById("actualGamesDisplay").textContent = actual;
+      document.getElementById("modeText").textContent = `${yankeesMode ? "Yankees Mode" : "Generic Team Mode"} is on. ${customizeMode ? "Customize Mode is unlocked, so you can type exact values." : "Customize Mode is locked, so sliders stay in realistic ranges."}`;
+      document.getElementById("customizeHeroBtn").textContent = customizeMode ? "🔓 Customize Mode On" : "🔒 Turn On Customize Mode";
+      document.getElementById("customizeHeroBtn").className = customizeMode ? "btn btn-gray" : "btn btn-navy";
+      document.getElementById("customizeBtn").textContent = customizeMode ? "Lock Values" : "Unlock Full Customization";
+      document.getElementById("topNote").textContent = `In this model, the ${team}'s unconstrained peak is ${raw.toFixed(1)} games. The modeled profit maximum is ${opt} home games.`;
+      document.getElementById("analysisIntro").textContent = yankeesMode
+        ? `The Yankees played ${actual} home games in the 2024 data set. This model compares that number to the modeled optimized schedule.`
+        : `Your selected team played ${actual} home games. This model compares that number to the modeled optimized schedule.`;
+      document.getElementById("practicalOptimal").textContent = opt;
+      document.getElementById("optimalProfit").textContent = money(profit(opt));
+      document.getElementById("unconstrainedPeak").textContent = raw.toFixed(1);
+      document.getElementById("practicalTarget").textContent = opt;
+      document.getElementById("actualGamesAnalysis").textContent = actual;
+      document.getElementById("missedProfit").textContent = money(missedProfit());
+      document.getElementById("peakPill").textContent = `Modeled Peak ≈ ${opt} games`;
+      document.getElementById("attendanceFormula").textContent = `A(g) = ${Math.round(state.baseAttendance).toLocaleString()} − ${Math.round(state.attendanceDrop)}g`;
+      document.getElementById("profitFormula").textContent = `P(g) = g[((A(g))(${revenuePerFan().toFixed(2)}) + ${money(state.broadcastPerGame)} + ${money(specialAdjustment())}) − ${money(state.costPerGame)}]`;
+      document.getElementById("derivativeText").textContent = `Since this creates a downward-opening quadratic, the maximum happens where P'(g) = 0. The unconstrained answer is ${raw.toFixed(1)} games, so the modeled answer is ${opt} home games.`;
+
+      const a = -state.attendanceDrop * revenuePerFan();
+      const b = state.baseAttendance * revenuePerFan() + state.broadcastPerGame + specialAdjustment() - state.costPerGame;
+      const expanded = document.getElementById("expandedProfitFormula");
+      const deriv = document.getElementById("derivativeFormula");
+      const critical = document.getElementById("criticalPointFormula");
+      const explanation = document.getElementById("calculusExplanation");
+      if (expanded) expanded.textContent = `Expanded form: P(g) = ${Math.round(a).toLocaleString()}g² + ${Math.round(b).toLocaleString()}g`;
+      if (deriv) deriv.textContent = `Derivative: P'(g) = ${Math.round(2*a).toLocaleString()}g + ${Math.round(b).toLocaleString()}`;
+      if (critical) critical.textContent = `Set P'(g)=0: 0 = ${Math.round(2*a).toLocaleString()}g + ${Math.round(b).toLocaleString()}, so g ≈ ${raw.toFixed(1)}`;
+      if (explanation) explanation.textContent = `Because the coefficient of g² is negative (${Math.round(a).toLocaleString()}), the parabola opens downward. That means the critical point at g ≈ ${raw.toFixed(1)} is a maximum. The model then caps the answer at ${Math.round(state.maxAllowedGames)} modeled home games, giving ${opt}.`;
+      const diffGames = opt - actual;
+      const miss = missedProfit();
+      document.getElementById("analysisConclusion").textContent =
+        diffGames > 0
+          ? `Using the current assumptions, the model says the ${team} would make about ${money(miss)} more by reaching the modeled optimum of ${opt} home games instead of only ${actual}. This supports the argument that the current schedule structure is financially unfair to teams because it can prevent them from reaching their profit-maximizing number of home games.`
+          : `Using the current assumptions, the ${team} are not missing modeled profit from too few games because the actual schedule is already at or above the derivative-based modeled optimum.`;
+    }
+
+
+    function renderFactorBreakdown() {
+      const opt = practicalOptimal();
+      const avgAttendance = attendance(opt);
+      const fanRevenue = revenuePerFan();
+      const ticketRevenue = avgAttendance * state.gatePerFan;
+      const foodRevenue = avgAttendance * state.foodProfit;
+      const merchRevenue = avgAttendance * state.merchProfit;
+      const broadcast = state.broadcastPerGame;
+      const special = specialAdjustment();
+      const perGameRevenue = ticketRevenue + foodRevenue + merchRevenue + broadcast + special;
+      const perGameProfit = perGameRevenue - state.costPerGame;
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+
+      setText("factorGames", `${opt} games`);
+      setText("factorDemand", `${Math.round(state.baseAttendance).toLocaleString()} fans`);
+      setText("factorDrop", `${Math.round(state.attendanceDrop)} fans/game`);
+      setText("factorGate", `$${Number(state.gatePerFan).toFixed(2)} per fan`);
+      setText("factorFood", `$${Number(state.foodProfit).toFixed(2)} per fan`);
+      setText("factorMerch", `$${Number(state.merchProfit).toFixed(2)} per fan`);
+      setText("factorBroadcast", `${money(state.broadcastPerGame)}/game`);
+      setText("factorSpecial", `${money(special)}/game`);
+      setText("factorCost", `${money(state.costPerGame)}/game`);
+      setText("factorAttendanceEquation", `A(g) = ${Math.round(state.baseAttendance).toLocaleString()} − ${Math.round(state.attendanceDrop)}g`);
+      setText("factorRevenueFanEquation", `Revenue per fan = $${Number(state.gatePerFan).toFixed(2)} + $${Number(state.foodProfit).toFixed(2)} + $${Number(state.merchProfit).toFixed(2)} = $${fanRevenue.toFixed(2)}`);
+      setText("factorProfitEquation", `P(g) = g[((A(g))(${fanRevenue.toFixed(2)}) + ${money(state.broadcastPerGame)} + ${money(special)}) − ${money(state.costPerGame)}]`);
+
+      const tbody = document.getElementById("factorBreakdownTable");
+      if (!tbody) return;
+      tbody.innerHTML = `
+        <tr><td>Modeled optimal games</td><td>${opt}</td><td>Calculated from P'(g)=0, which is where marginal profit becomes zero.</td></tr>
+        <tr><td>Average attendance at ${opt} games</td><td>${Math.round(avgAttendance).toLocaleString()}</td><td>A(${opt}) = ${Math.round(state.baseAttendance).toLocaleString()} − ${Math.round(state.attendanceDrop)}(${opt})</td></tr>
+        <tr><td>Ticket/gate revenue per game</td><td>${money(ticketRevenue)}</td><td>Average attendance × gate revenue per fan.</td></tr>
+        <tr><td>Food profit per game</td><td>${money(foodRevenue)}</td><td>Average attendance × food profit per fan.</td></tr>
+        <tr><td>Merch profit per game</td><td>${money(merchRevenue)}</td><td>Average attendance × merch profit per fan.</td></tr>
+        <tr><td>Broadcast revenue per game</td><td>${money(broadcast)}</td><td>Estimated media value per game.</td></tr>
+        <tr><td>Special adjustments per game</td><td>${money(special)}</td><td>Rivalry/high-demand bonus + surrounding-area growth − underperformance penalty.</td></tr>
+        <tr><td>Total revenue per game</td><td>${money(perGameRevenue)}</td><td>Ticket + food + merch + broadcast + special adjustments.</td></tr>
+        <tr><td>Total cost per game</td><td>${money(state.costPerGame)}</td><td>Salary/tax allocation + operating costs.</td></tr>
+        <tr class="optimal-row"><td>Profit per game at ${opt} games</td><td>${money(perGameProfit)}</td><td>Total revenue per game − total cost per game.</td></tr>
+        <tr class="optimal-row"><td>Total modeled profit</td><td>${money(profit(opt))}</td><td>Profit per game × ${opt} games.</td></tr>
+      `;
+    }
+
+    function render() {
+      renderText();
+      renderInputs();
+      renderChart();
+      renderTables();
+      renderFactorBreakdown();
+    }
+
+    document.getElementById("resetBtn").addEventListener("click", resetDefaults);
+    document.getElementById("customizeHeroBtn").addEventListener("click", toggleCustomize);
+    document.getElementById("customizeBtn").addEventListener("click", toggleCustomize);
+    document.getElementById("teamToggleBtn").addEventListener("click", toggleTeamMode);
+    document.getElementById("teamToggleBtn2").addEventListener("click", toggleTeamMode);
+
+    const slides = document.getElementById("slides");
+    document.getElementById("nextSlide").addEventListener("click", () => slides.scrollBy({ left: slides.clientWidth * .9, behavior: "smooth" }));
+    document.getElementById("prevSlide").addEventListener("click", () => slides.scrollBy({ left: -slides.clientWidth * .9, behavior: "smooth" }));
+
+    let isDown = false, startX = 0, scrollLeft = 0;
+    slides.addEventListener("mousedown", e => {
+      isDown = true; slides.classList.add("dragging"); startX = e.pageX - slides.offsetLeft; scrollLeft = slides.scrollLeft;
+    });
+    slides.addEventListener("mouseleave", () => { isDown = false; slides.classList.remove("dragging"); });
+    slides.addEventListener("mouseup", () => { isDown = false; slides.classList.remove("dragging"); });
+    slides.addEventListener("mousemove", e => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slides.offsetLeft;
+      slides.scrollLeft = scrollLeft - (x - startX) * 1.1;
+    });
+
+    render();
+  </script>
+</body>
+</html>
