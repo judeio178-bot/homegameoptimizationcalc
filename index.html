@@ -505,10 +505,6 @@
   <section class="section" id="customizeSection">
     <div class="container">
       <h2 class="section-title">Customizable Profit Optimizer</h2>
-      <p class="section-subtitle">
-        This section lets the user pick every important value. In slider mode, the values stay in reasonable ranges. In Customize Mode, the user can type exact numbers.
-      </p>
-
       <div class="content-grid">
         <div class="panel">
           <div class="panel-heading">
@@ -757,9 +753,7 @@
     </div>
   </section>
 
-  <footer>
-    Built as a one-file interactive calculus project. All estimates are editable in Customize Mode.
-  </footer>
+
 
   <script>
     const defaultValues = {
@@ -934,7 +928,7 @@
       document.getElementById("customizeHeroBtn").textContent = customizeMode ? "🔓 Customize Mode On" : "🔒 Turn On Customize Mode";
       document.getElementById("customizeHeroBtn").className = customizeMode ? "btn btn-gray" : "btn btn-navy";
       document.getElementById("customizeBtn").textContent = customizeMode ? "Lock Values" : "Unlock Full Customization";
-      document.getElementById("topNote").textContent = `In this model, the ${team}'s unconstrained peak is ${raw.toFixed(1)} games. The modeled profit maximum is ${opt} home games.`;
+      document.getElementById("topNote").textContent = `In this model, the ${team}'s peak is ${raw.toFixed(1)} games. The amount of home games they should have to maximize profit is ${opt}.`;
       document.getElementById("analysisIntro").textContent = yankeesMode
         ? `The Yankees played ${actual} home games in the 2024 data set. This model compares that number to the modeled optimized schedule.`
         : `Your selected team played ${actual} home games. This model compares that number to the modeled optimized schedule.`;
