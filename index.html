@@ -845,8 +845,14 @@
       const x = g => padding + ((g-minGame)/(maxGame-minGame))*(width-padding*2);
       const y = v => height-padding-((v-minProfit)/range)*(height-padding*2);
       const points = data.map(d=>`${x(d.games)},${y(d.profitMillions)}`).join(" ");
-      const practicalX = x(practicalOptimal());
-      const actualX = x(Math.round(state.actualHomeGames));
+  const practicalGames = practicalOptimal();
+const actualGames = Math.round(state.actualHomeGames);
+
+const practicalX = x(practicalGames);
+const actualX = x(actualGames);
+
+const practicalY = y(profit(practicalGames) / 1000000);
+const actualY = y(profit(actualGames) / 1000000);
       let html = "";
       html += `<line x1="${padding}" y1="${height-padding}" x2="${width-padding}" y2="${height-padding}" stroke="#0c2340" stroke-width="2"/>`;
       html += `<line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height-padding}" stroke="#0c2340" stroke-width="2"/>`;
@@ -865,6 +871,11 @@
       html += `<line x1="${practicalX}" y1="${padding}" x2="${practicalX}" y2="${height-padding}" stroke="#0c2340" stroke-width="2" stroke-dasharray="7 7"/>`;
       html += `<text x="${practicalX}" y="${padding-12}" text-anchor="middle" font-size="12" font-weight="800" fill="#0c2340">Modeled Optimal</text>`;
       html += `<polyline fill="none" stroke="#0c2340" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" points="${points}"/>`;
+      html += `<text x="${actualX}" y="${actualY - 10}" text-anchor="middle" font-size="26">⚾</text>`;
+html += `<text x="${practicalX}" y="${practicalY - 10}" text-anchor="middle" font-size="32">⚾</text>`;
+
+html += `<text x="${actualX}" y="${actualY + 24}" text-anchor="middle" font-size="12" font-weight="800" fill="#ff8a00">Actual</text>`;
+html += `<text x="${practicalX}" y="${practicalY + 28}" text-anchor="middle" font-size="12" font-weight="800" fill="#0c2340">Max Profit</text>`;
       html += `<text x="${width/2}" y="${height-2}" text-anchor="middle" font-size="13" font-weight="800" fill="#0c2340">Home Games</text>`;
       html += `<text x="18" y="30" font-size="13" font-weight="800" fill="#0c2340">Profit</text>`;
       svg.innerHTML = html;
