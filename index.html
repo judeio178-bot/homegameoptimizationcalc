@@ -947,7 +947,7 @@
       document.getElementById("peakPill").textContent = `Modeled Peak ≈ ${opt} games`;
       document.getElementById("attendanceFormula").textContent = `A(g) = ${Math.round(state.baseAttendance).toLocaleString()} − ${Math.round(state.attendanceDrop)}g`;
       document.getElementById("profitFormula").textContent = `P(g) = g[((A(g))(${revenuePerFan().toFixed(2)}) + ${money(state.broadcastPerGame)} + ${money(specialAdjustment())}) − ${money(state.costPerGame)}]`;
-      document.getElementById("derivativeText").textContent = `Since this creates a downward-opening quadratic, the maximum happens where P'(g) = 0. The unconstrained answer is ${raw.toFixed(1)} games, so the modeled answer is ${opt} home games.`;
+      document.getElementById("derivativeText").textContent = `Since this creates a downward-opening quadratic, the maximum happens where P'(g) = 0. This occous at ${raw.toFixed(1)} games, so, the optimal # is ${opt} home games.`;
 
       const a = -state.attendanceDrop * revenuePerFan();
       const b = state.baseAttendance * revenuePerFan() + state.broadcastPerGame + specialAdjustment() - state.costPerGame;
@@ -963,8 +963,8 @@
       const miss = missedProfit();
       document.getElementById("analysisConclusion").textContent =
         diffGames > 0
-          ? `Using the current assumptions, the model says the ${team} would make about ${money(miss)} more by reaching the modeled optimum of ${opt} home games instead of only ${actual}. This supports the argument that the current schedule structure is financially unfair to teams because it can prevent them from reaching their profit-maximizing number of home games.`
-          : `Using the current assumptions, the ${team} are not missing modeled profit from too few games because the actual schedule is already at or above the derivative-based modeled optimum.`;
+          ? `With the assumptions given to my model, the ${team} is losing out on ${money(miss)} because they are not playing the optimal amount of ${opt} home games instead of only ${actual}.`
+          : `With the assumptions given to my model, the ${team} are not missing modeled profit from too few games because the actual schedule is already at or above the modeled amount.`;
     }
 
 
