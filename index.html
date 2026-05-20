@@ -593,7 +593,7 @@
         <div class="factor-card">
           <h3>3. Attendance Drop</h3>
           <div class="value" id="factorDrop">300 fans/game</div>
-          <p>This creates diminishing returns. Each added home game lowers expected average attendance by this amount.</p>
+          <p> Each added home game lowers expected average attendance because more games creates less demand to attend.</p>
         </div>
         <div class="factor-card">
           <h3>4. Ticket / Gate Revenue</h3>
@@ -608,7 +608,7 @@
         <div class="factor-card">
           <h3>6. Merch Profit</h3>
           <div class="value" id="factorMerch">$6.00 per fan</div>
-          <p>This estimates profit from hats, jerseys, and other merchandise.</p>
+          <p>If 100 jerseys are sold for $110 each, each fan spends around this amound on merchandise.</p>
         </div>
         <div class="factor-card">
           <h3>7. Broadcast Revenue</h3>
@@ -618,7 +618,7 @@
         <div class="factor-card">
           <h3>8. Special Game Adjustment</h3>
           <div class="value" id="factorSpecial">$410,000/game</div>
-          <p>Rivalry bonus + local business growth − weather/underperformance penalty.</p>
+          <p>Factoring in everything, underpreforming games, overpreforming games, games that sell more merch and food, aswell as local buisness growth.</p>
         </div>
         <div class="factor-card">
           <h3>9. Total Per-Game Cost</h3>
@@ -709,31 +709,16 @@
               </tbody>
             </table>
           </div>
-          <div class="source-card">
-            <h3>Why $8.85 food profit per fan is reasonable</h3>
-            <p>
-              The $8.85 value is an estimate, not an official Yankees number. It is based on the idea that a fan buys about $14.75 of basic concessions and that the stadium keeps about 60% as gross profit.
-            </p>
             <div class="calc-highlight">$14.75 × 60% = $8.85 food profit per fan</div>
-            <p style="margin-top:10px">
-              This is reasonable because concession items like hot dogs, soda, and beer are usually high-margin. A stadium concession industry estimate places hot dog gross margins around 60%–75%, so using 60% is a conservative lower-end assumption.
-            </p>
-          </div>
-
           <div class="source-card">
             <h3>Exact source list for research values</h3>
             <ul>
               <li><b>ESPN 2024 MLB Attendance:</b> Yankees listed with 79 home games, 3,309,838 home attendance, and 41,896 average home attendance.</li>
               <li><b>Statista Yankees Gate Receipts:</b> Yankees 2024 gate receipts listed at $333 million.</li>
               <li><b>Spotrac Yankees 2024 Financial Summary:</b> Yankees 2024 luxury tax payroll listed at $316,192,828 and tax bill at $62,512,111.</li>
-              <li><b>Concession estimate:</b> $8.85 food profit is estimated from $14.75 basic concession spending × 60% margin. The 60% margin is supported by concession-industry estimates for high-margin stadium items.</li>
+              <li><b>Concession ESTIMATE:</b> $8.85 food profit is estimated from $14.75 basic concession spending × 60% margin. The 60% margin is supported by concession-industry estimates for high-margin stadium items.</li>
             </ul>
           </div>
-
-          <p class="note">
-            Important: attendance, gate receipts, and payroll/tax are sourced values. Food profit, merch profit, broadcast-per-game, operating costs, rivalry bonus, weather penalty, and attendance-drop rate are clearly labeled modeling assumptions because those exact Yankees per-game accounting numbers are private.
-          </p>
-        </div>
 
         <div class="panel">
           <h2>Planning Flowchart</h2>
@@ -744,7 +729,7 @@
             <div class="flow-arrow">↓</div>
             <div class="flow-step"><h4>3. Build equations</h4><p>A(g) estimates attendance. P(g) estimates total profit.</p></div>
             <div class="flow-arrow">↓</div>
-            <div class="flow-step"><h4>4. Optimize</h4><p>Use the vertex/derivative to find the maximum of the profit curve.</p></div>
+            <div class="flow-step"><h4>4. Optimize</h4><p>Use the derivative=0 to find the maximum of the profit curve.</p></div>
             <div class="flow-arrow">↓</div>
             <div class="flow-step"><h4>5. Compare to real life</h4><p>Compare modeled optimal games to the team's actual home games and calculate missed profit.</p></div>
           </div>
