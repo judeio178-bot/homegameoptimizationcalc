@@ -496,7 +496,6 @@
             <div class="square-icon">🧮</div>
             <div>
               <h2>Profit Inputs</h2>
-              <div class="panel-subtitle">Each input includes a short explanation so the user knows what they are changing.</div>
             </div>
           </div>
           <div class="input-list" id="inputList"></div>
@@ -748,13 +747,13 @@
     const inputDefinitions = [
       { key:"baseAttendance", label:"Starting attendance demand", min:50000, max:80000, step:500, icon:"👥", description:"The attendance level before schedule fatigue is applied.", inputStep:1, display:v=>`${Math.round(v).toLocaleString()} fans` },
       { key:"attendanceDrop", label:"Attendance drop per added home game", min:50, max:700, step:10, icon:"📉", description:"The diminishing-returns value. If this is higher, each extra game lowers average attendance more.", inputStep:1, display:v=>`${Math.round(v)} fans/game` },
-      { key:"gatePerFan", label:"Ticket / gate revenue per fan", min:40, max:180, step:1, icon:"🎟️", description:"Average money earned from each fan's ticket or gate receipt.", inputStep:.01, display:v=>`$${Number(v).toFixed(2)}` },
+      { key:"gatePerFan", label:"Ticket revenue per fan", min:40, max:180, step:1, icon:"🎟️", description:"Average money earned from each fan's ticket or gate receipt.", inputStep:.01, display:v=>`$${Number(v).toFixed(2)}` },
       { key:"foodProfit", label:"Food profit per fan", min:0, max:25, step:.25, icon:"🌭", description:"Concession profit after subtracting the production cost of food and drinks.", inputStep:.01, display:v=>`$${Number(v).toFixed(2)}` },
       { key:"merchProfit", label:"Merch profit per fan", min:0, max:25, step:.25, icon:"🧢", description:"Estimated profit from jerseys, hats, and other merchandise per fan.", inputStep:.01, display:v=>`$${Number(v).toFixed(2)}` },
       { key:"broadcastPerGame", label:"Broadcast revenue per game", min:500000, max:2500000, step:50000, icon:"📺", description:"TV/media money assigned to each game.", inputStep:1, display:v=>money(v) },
       { key:"costPerGame", label:"Total cost per home game", min:1500000, max:6000000, step:50000, icon:"🛠️", description:"Player salary allocation, employees, stadium maintenance, utilities, transportation, ads, and production.", inputStep:1, display:v=>money(v) },
       { key:"rivalryBonus", label:"Rivalry / high-demand game bonus", min:0, max:1000000, step:25000, icon:"⚾", description:"Extra profit from rivalry games, playoff races, sold-out energy, or famous opponents.", inputStep:1, display:v=>money(v) },
-      { key:"weatherPenalty", label:"Weather / underperformance penalty", min:0, max:600000, step:10000, icon:"🌧️", description:"Lost profit from rain, weak opponents, bad timing, or games that underperform.", inputStep:1, display:v=>money(v) },
+      { key:"weatherPenalty", label:"Weather losses", min:0, max:600000, step:10000, icon:"🌧️", description:"Lost profit from rain, weak opponents, bad timing, or games that underperform.", inputStep:1, display:v=>money(v) },
       { key:"localBusinessBoost", label:"Surrounding-area growth", min:0, max:800000, step:25000, icon:"🏙️", description:"Parking, nearby restaurants, bars, and other local spending connected to game day.", inputStep:1, display:v=>money(v) },
       { key:"actualHomeGames", label:"Actual home games played", min:50, max:90, step:1, icon:"📅", description:"The real schedule number used to compare against the model's optimal result.", inputStep:1, display:v=>`${Math.round(v)} games` }
     ];
