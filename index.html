@@ -440,7 +440,7 @@
 
         <div class="panel">
           <h2>Actual vs. Optimal Analysis</h2>
-          <p class="panel-subtitle" id="analysisIntro">The Yankees played 79 home games in the 2024 data set. This model compares that number to the modeled optimized schedule.</p>
+          <p class="panel-subtitle" id="analysisIntro">The Yankees played 81 home games in the 2025 data set. This model compares that number to the modeled optimized schedule.</p>
 
           <div class="analysis-grid">
             <div class="analysis-card">
@@ -455,7 +455,7 @@
             </div>
             <div class="analysis-card">
               <h3>Actual Games</h3>
-              <p id="actualGamesAnalysis">79</p>
+              <p id="actualGamesAnalysis">81</p>
               <small>Based on the research value or your custom input.</small>
             </div>
             <div class="analysis-card">
@@ -479,7 +479,7 @@
           </div>
 
           <p class="note" id="analysisConclusion">
-            Using the default assumptions, the model says the Yankees would make about $652,622 more by reaching the practical cap of 81 home games instead of 79.
+            Using the default assumptions, the model says the Yankees would make about $652,622 more by reaching the practical cap of 85 home games instead of 81.
           </p>
         </div>
       </div>
@@ -650,17 +650,17 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>2024 home games</td>
-                  <td>79</td>
+                  <td>2025 home games</td>
+                  <td>81</td>
                   <td>Used as the actual schedule comparison point. Source: ESPN attendance table.</td>
                 </tr>
                 <tr>
-                  <td>2024 home attendance</td>
+                  <td>2025 home attendance</td>
                   <td>3,309,838 total / 41,896 per game</td>
                   <td>Used to anchor the attendance model. Source: ESPN attendance table.</td>
                 </tr>
                 <tr>
-                  <td>2024 gate receipts</td>
+                  <td>2025 gate receipts</td>
                   <td>$333 million</td>
                   <td>Used to estimate gate revenue per fan. Source: Statista.</td>
                 </tr>
@@ -670,7 +670,7 @@
                   <td>Calculated as $333,000,000 ÷ 3,309,838 fans.</td>
                 </tr>
                 <tr>
-                  <td>2024 luxury tax payroll + tax bill</td>
+                  <td>2025 luxury tax payroll + tax bill</td>
                   <td>About $378.7 million</td>
                   <td>Used to estimate salary/tax allocation per game. Source: Spotrac.</td>
                 </tr>
@@ -696,9 +696,9 @@
           <div class="source-card">
             <h3>Exact source list for research values</h3>
             <ul>
-              <li><b>ESPN 2024 MLB Attendance:</b> Yankees listed with 79 home games, 3,309,838 home attendance, and 41,896 average home attendance.</li>
-              <li><b>Statista Yankees Gate Receipts:</b> Yankees 2024 gate receipts listed at $333 million.</li>
-              <li><b>Spotrac Yankees 2024 Financial Summary:</b> Yankees 2024 luxury tax payroll listed at $316,192,828 and tax bill at $62,512,111.</li>
+              <li><b>ESPN 2025 MLB Attendance:</b> Yankees listed with 81 home games, 3,309,838 home attendance, and 41,896 average home attendance.</li>
+              <li><b>Statista Yankees Gate Receipts:</b> Yankees 2025 gate receipts listed at $333 million.</li>
+              <li><b>Spotrac Yankees 2025 Financial Summary:</b> Yankees 2025 luxury tax payroll listed at $316,192,828 and tax bill at $62,512,111.</li>
               <li><b>Concession ESTIMATE:</b> $8.85 food profit is estimated from $14.75 basic concession spending × 60% margin. The 60% margin is supported by concession-industry estimates for high-margin stadium items.</li>
             </ul>
           </div>
@@ -735,7 +735,7 @@
       rivalryBonus: 325000,
       weatherPenalty: 90000,
       localBusinessBoost: 175000,
-      actualHomeGames: 79,
+      actualHomeGames: 81,
       maxAllowedGames: 120
     };
 
@@ -939,7 +939,7 @@
       document.getElementById("modelSectionSubtitle").textContent = yankeesMode
         ? "This section uses the research-based Yankees starting values. The model uses calculus to find the number of home games where profit is maximized, then compares that value to the Yankees' actual home schedule."
         : "This section uses your custom team values. The model uses calculus to find the number of home games where profit is maximized, then compares that value to the actual number of home games.";
-      document.getElementById("actualGamesLabel").textContent = yankeesMode ? "Actual 2024 Home Games" : "Actual Home Games";
+      document.getElementById("actualGamesLabel").textContent = yankeesMode ? "Actual 2025 Home Games" : "Actual Home Games";
       document.getElementById("actualGamesDisplay").textContent = actual;
       document.getElementById("modeText").textContent = `${yankeesMode ? "Yankees Mode" : "Generic Team Mode"} is on. ${customizeMode ? "Customize Mode is unlocked, so you can type exact values." : "Customize Mode is locked, so sliders stay in realistic ranges."}`;
       document.getElementById("customizeHeroBtn").textContent = customizeMode ? "🔓 Customize Mode On" : "🔒 Turn On Customize Mode";
@@ -947,7 +947,7 @@
       document.getElementById("customizeBtn").textContent = customizeMode ? "Lock Values" : "Unlock Full Customization";
       document.getElementById("topNote").textContent = `In this model, the ${team}'s peak is ${raw.toFixed(1)} games. The amount of home games they should have to maximize profit is ${opt}.`;
       document.getElementById("analysisIntro").textContent = yankeesMode
-        ? `The Yankees played ${actual} home games in the 2024 data set. This model compares that number to the modeled optimized schedule.`
+        ? `The Yankees played ${actual} home games in the 2025 data set. This model compares that number to the modeled optimized schedule.`
         : `Your selected team played ${actual} home games. This model compares that number to the modeled optimized schedule.`;
       document.getElementById("practicalOptimal").textContent = opt;
       document.getElementById("optimalProfit").textContent = money(profit(opt));
