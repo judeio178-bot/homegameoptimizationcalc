@@ -246,7 +246,6 @@
       <div>
         <div class="badges">
           <span class="badge" id="brandBadge">New York Yankees Calculus Optimization</span>
-          <span class="badge outline" id="locationBadge">📍 Yankee Stadium, Bronx, NY</span>
         </div>
         <h1 id="heroTitle">How Many Home Games Should the Yankees Play?</h1>
         <p id="heroText">
@@ -264,7 +263,7 @@
         <div class="card-header">
           <div class="ball-icon" id="mainIcon">⚾</div>
           <div>
-            <div class="eyebrow" id="modelEyebrow">Bronx Bombers Model</div>
+            <div class="eyebrow" id="modelEyebrow">Yankees Model</div>
             <div class="card-title">Profit Maximum</div>
           </div>
         </div>
@@ -283,8 +282,8 @@
             <p id="optimalProfit">$248.1M</p>
           </div>
           <div class="mini-card">
-            <h3 id="actualGamesLabel">Actual 2024 Home Games</h3>
-            <p id="actualGamesDisplay">79</p>
+            <h3 id="actualGamesLabel">Actual 2026 Home Games</h3>
+            <p id="actualGamesDisplay">81</p>
           </div>
         </div>
 
@@ -925,16 +924,14 @@
       const opt = practicalOptimal(), raw = unconstrainedOptimal(), actual = Math.round(state.actualHomeGames);
       const team = yankeesMode ? "Yankees" : "team";
       const fullTeam = yankeesMode ? "New York Yankees" : "sports team";
-      const place = yankeesMode ? "Yankee Stadium, Bronx, NY" : "Home stadium";
 
       document.getElementById("brandBadge").textContent = yankeesMode ? "New York Yankees Calculus Optimization" : "Generic Sports Team Calculus Optimization";
-      document.getElementById("locationBadge").textContent = yankeesMode ? "📍 Yankee Stadium, Bronx, NY" : "📍 Any home stadium";
       document.getElementById("heroTitle").textContent = yankeesMode ? "How Many Home Games Should the Yankees Play?" : "How Many Home Games Should a Team Play?";
       document.getElementById("heroText").textContent = yankeesMode
         ? "A Yankees-themed profit optimizer that models ticket sales, concessions, merch, YES Network-style broadcast value, stadium costs, rivalry games, and Bronx economic impact."
         : "A customizable sports-team profit optimizer that models ticket sales, concessions, merch, broadcast value, stadium costs, special games, and surrounding-area economic impact.";
       document.getElementById("mainIcon").textContent = yankeesMode ? "⚾" : "🏟️";
-      document.getElementById("modelEyebrow").textContent = yankeesMode ? "Bronx Bombers Model" : "Custom Team Model";
+      document.getElementById("modelEyebrow").textContent = yankeesMode ? "Yankees Model" : "Custom Team Model";
       document.getElementById("teamToggleBtn").textContent = yankeesMode ? "Switch to Generic Team Mode" : "Switch to Yankees Mode";
       document.getElementById("teamToggleBtn2").textContent = yankeesMode ? "Generic Team Mode" : "Yankees Mode";
       document.getElementById("chartTitle").textContent = yankeesMode ? "Yankees Profit Curve" : "Team Profit Curve";
